@@ -2,17 +2,18 @@ rootDirectory 		:= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 commonHeader  		:= $(rootDirectory)/Common/Header
 commonSource  		:= $(rootDirectory)/Common/Source
 commonBin     		:= bin/common
+optimizationFlags   := -O
 processDependencies := bin/common/Semaphore.o bin/common/SharedMemory.o bin/common/Buffer.o bin/common/ReadOnlyBuffer.o bin/common/WriteOnlyBuffer.o bin/common/Thread.o
 
 a:
 	@echo "Building process A.\n";
-	g++ -c -I$(commonHeader) processes/A/processA.cpp -o bin/processes/processA.o
-	g++ $(processDependencies) bin/processes/processA.o -o build/processes/processA
+	g++ -c -I$(commonHeader) Processes/A/processA.cpp -o bin/processes/processA.o $(optimizationFlags)
+	g++ $(processDependencies) bin/processes/processA.o -o build/processes/processA $(optimizationFlags)
 
 b:
 	@echo "Building process B.\n";
-	g++ -c -I$(commonHeader) processes/B/processB.cpp -o bin/processes/processB.o
-	g++ $(processDependencies) bin/processes/processB.o -o build/processes/processB
+	g++ -c -I$(commonHeader) Processes/B/processB.cpp -o bin/processes/processB.o $(optimizationFlags)
+	g++ $(processDependencies) bin/processes/processB.o -o build/processes/processB $(optimizationFlags)
 
 proj:
 	@echo "Building project.\n";
@@ -25,12 +26,12 @@ proj:
 common:
 	@echo "Compiling common objects for the project.\n";
 
-	g++ -c -I$(commonHeader) $(commonSource)/Semaphore.cpp -o $(commonBin)/Semaphore.o
-	g++ -c -I$(commonHeader) $(commonSource)/Thread.cpp -o $(commonBin)/Thread.o
-	g++ -c -I$(commonHeader) $(commonSource)/SharedMemory.cpp -o $(commonBin)/SharedMemory.o
-	g++ -c -I$(commonHeader) $(commonSource)/Buffer.cpp -o $(commonBin)/Buffer.o
-	g++ -c -I$(commonHeader) $(commonSource)/ReadOnlyBuffer.cpp -o $(commonBin)/ReadOnlyBuffer.o
-	g++ -c -I$(commonHeader) $(commonSource)/WriteOnlyBuffer.cpp -o $(commonBin)/WriteOnlyBuffer.o
+	g++ -c -I$(commonHeader) $(commonSource)/Semaphore.cpp -o $(commonBin)/Semaphore.o $(optimizationFlags)
+	g++ -c -I$(commonHeader) $(commonSource)/Thread.cpp -o $(commonBin)/Thread.o $(optimizationFlags)
+	g++ -c -I$(commonHeader) $(commonSource)/SharedMemory.cpp -o $(commonBin)/SharedMemory.o $(optimizationFlags)
+	g++ -c -I$(commonHeader) $(commonSource)/Buffer.cpp -o $(commonBin)/Buffer.o $(optimizationFlags)
+	g++ -c -I$(commonHeader) $(commonSource)/ReadOnlyBuffer.cpp -o $(commonBin)/ReadOnlyBuffer.o $(optimizationFlags)
+	g++ -c -I$(commonHeader) $(commonSource)/WriteOnlyBuffer.cpp -o $(commonBin)/WriteOnlyBuffer.o $(optimizationFlags)
 
 clean:
 	@echo "Cleaning project files.\n";

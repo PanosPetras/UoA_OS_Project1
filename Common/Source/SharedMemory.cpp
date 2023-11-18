@@ -1,10 +1,10 @@
 #include "SharedMemory.hpp"
+#include "Constants.hpp"
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/shm.h>
 #include <sys/mman.h>
 #include <fcntl.h>
-#include "Constants.hpp"
 #include <stdexcept>
 
 SharedMemory::SharedMemory() { }
@@ -22,7 +22,7 @@ void SharedMemory::Initialize(
     smfd = shm_open(name.c_str(), O_CREAT | O_RDWR, 0666);
 
     // Configure the size of the shared memory object
-    ftruncate(smfd, Constants::bufferSize);
+    if(ftruncate(smfd, Constants::bufferSize)) throw std::bad_alloc();
 
     // Memory map the shared memory object
     memory = (char*)mmap(0, Constants::bufferSize, PROT_WRITE | PROT_READ, MAP_SHARED, smfd, 0);
