@@ -2,7 +2,7 @@ rootDirectory 		:= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 commonHeader  		:= $(rootDirectory)/Common/Header
 commonSource  		:= $(rootDirectory)/Common/Source
 commonBin     		:= bin/common
-processDependencies := bin/common/Semaphore.o bin/common/SharedMemory.o bin/common/Buffer.o bin/common/ReadOnlyBuffer.o bin/common/WriteOnlyBuffer.o
+processDependencies := bin/common/Semaphore.o bin/common/SharedMemory.o bin/common/Buffer.o bin/common/ReadOnlyBuffer.o bin/common/WriteOnlyBuffer.o bin/common/Thread.o
 
 a:
 	@echo "Building process A.\n";
@@ -26,6 +26,7 @@ common:
 	@echo "Compiling common objects for the project.\n";
 
 	g++ -c -I$(commonHeader) $(commonSource)/Semaphore.cpp -o $(commonBin)/Semaphore.o
+	g++ -c -I$(commonHeader) $(commonSource)/Thread.cpp -o $(commonBin)/Thread.o
 	g++ -c -I$(commonHeader) $(commonSource)/SharedMemory.cpp -o $(commonBin)/SharedMemory.o
 	g++ -c -I$(commonHeader) $(commonSource)/Buffer.cpp -o $(commonBin)/Buffer.o
 	g++ -c -I$(commonHeader) $(commonSource)/ReadOnlyBuffer.cpp -o $(commonBin)/ReadOnlyBuffer.o

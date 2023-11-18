@@ -1,6 +1,7 @@
 #include "ReceiverThread.hpp"
 #include "SenderThread.hpp"
 #include "Constants.hpp"
+#include "Thread.hpp"
 #include <pthread.h>
 #include <iostream>
 
@@ -21,22 +22,12 @@ int main() {
         std::string(Constants::shmSegment1)
     );
 
-    pthread_t senderThreadId, receiverThreadId;
+    Thread senderThread = Thread(&SenderThread, &wBuff),
+            receiverThread(&ReceiverThread, &rBuff);
+    
+    senderThread.Start();
+    receiverThread.Start();
 
-    pthread_create(
-        &senderThreadId, 
-        NULL, 
-        &SenderThread, 
-        &wBuff
-    );
-
-    pthread_create(
-        &receiverThreadId,
-        NULL, 
-        &ReceiverThread, 
-        &rBuff
-    );
-
-    pthread_join(senderThreadId, nullptr);
-    pthread_join(receiverThreadId, nullptr);
+    senderThread.Join();
+    receiverThread.Join();
 }
