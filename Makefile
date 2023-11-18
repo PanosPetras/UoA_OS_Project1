@@ -32,17 +32,14 @@ common:
 	g++ -c -I$(commonHeader) $(commonSource)/ReadOnlyBuffer.cpp -o $(commonBin)/ReadOnlyBuffer.o
 	g++ -c -I$(commonHeader) $(commonSource)/WriteOnlyBuffer.cpp -o $(commonBin)/WriteOnlyBuffer.o
 
-run:
-	@echo "Building and running project.\n";
-
 clean:
 	@echo "Cleaning project files.\n";
 
 	rm -rf bin/common/*
+	rm -rf bin/processes/*
 	rm -rf bin/tests/*
 	rm -rf build/tests/*
-	rm -rf build/A/*
-	rm -rf build/B/*
+	rm -rf build/processes/*
 
 tests:
 	@echo "Building tests\n";

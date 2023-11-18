@@ -1,4 +1,5 @@
 #include "Thread.hpp"
+#include <pthread.h>
 
 Thread::Thread(
     void* (*func)(void*),
@@ -22,9 +23,13 @@ void Thread::Start() {
     );
 }
 
-void Thread::Join() {
-    if(isJoined) return;
+void* Thread::Join() {
+    if(isJoined) return nullptr;
     isJoined = true;
 
-    pthread_join(threadId, nullptr);
+    void* returnValue;
+
+    pthread_join(threadId, &returnValue);
+
+    return returnValue;
 }

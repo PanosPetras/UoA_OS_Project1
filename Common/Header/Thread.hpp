@@ -1,7 +1,7 @@
-#ifndef thread_hpp
-#define thread_hpp
+#ifndef Thread_hpp
+#define Thread_hpp
 
-#include <pthread.h>
+typedef unsigned long int pthread_t;
 
 class Thread {
 protected:
@@ -19,7 +19,7 @@ public:
     );
 
     void Start();
-    void Join();
+    void* Join();
 };
 
 #endif
