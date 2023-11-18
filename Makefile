@@ -46,12 +46,15 @@ tests:
 	g++ -c -I$(commonHeader) Tests/SemaphoreTest.cpp -o bin/tests/SemaphoreTest.o
 	g++ -c -I$(commonHeader) Tests/SharedMemoryTest.cpp -o bin/tests/SharedMemoryTest.o
 	g++ -c -I$(commonHeader) Tests/BufferTest.cpp -o bin/tests/BufferTest.o
+	g++ -c -I$(commonHeader) Tests/ThreadTest.cpp -o bin/tests/ThreadTest.o
 	g++ bin/common/Semaphore.o bin/tests/SemaphoreTest.o -o build/tests/SemaphoreTest
 	g++ bin/common/SharedMemory.o bin/tests/SharedMemoryTest.o -o build/tests/SharedMemoryTest
 	g++ bin/common/SharedMemory.o bin/common/Semaphore.o bin/common/Buffer.o bin/common/ReadOnlyBuffer.o bin/common/WriteOnlyBuffer.o bin/tests/BufferTest.o -o build/tests/BufferTest
+	g++ bin/common/Thread.o bin/tests/ThreadTest.o -o build/tests/ThreadTest
 
 	@echo "---------------";
 	@echo "Running tests\n";
 	./build/tests/SemaphoreTest
 	./build/tests/SharedMemoryTest
 	./build/tests/BufferTest
+	./build/tests/ThreadTest
