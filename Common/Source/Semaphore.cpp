@@ -14,17 +14,16 @@ Semaphore::~Semaphore() {
     if(sem_close(semaphore) < 0)
         perror("Failed to close semaphore");
 
-    if(wasInitialized)
-        if(sem_destroy(semaphore) < 0)
-            perror("Failed to destroy semaphore");
+    sem_unlink(name.c_str());
 }
 
 void Semaphore::Initialize(
     std::string name,
     int initialValue
 ) {
+    this->name = name;
+    
     semaphore = sem_open(name.c_str(), O_CREAT, PERMS, initialValue);
-    wasInitialized = true;
 
     if(semaphore == SEM_FAILED) { 
         perror("Failed to initialize semaphore");
@@ -35,8 +34,9 @@ void Semaphore::Initialize(
 void Semaphore::Open(
     std::string name
 ) {
+    this->name = name;
+
     semaphore = sem_open(name.c_str(), O_RDWR);
-    wasInitialized = false;
 
     if(semaphore == SEM_FAILED) { 
         perror("Failed to open semaphore");

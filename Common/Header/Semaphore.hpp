@@ -8,7 +8,7 @@ class Semaphore {
 protected:
     sem_t *semaphore;
 
-    bool wasInitialized;
+    std::string name;
 
 public:
     Semaphore();
