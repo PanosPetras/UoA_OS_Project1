@@ -9,6 +9,8 @@ void* ReceiverThread(void* buffer){
         std::string message = wBuff->Read();
 
         std::cout << message << std::endl;
+
+        if(message == "#BYE#") pthread_exit(NULL);
     }
 
     return nullptr;

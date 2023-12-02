@@ -38,3 +38,7 @@ void* Thread::Join() {
 
     return returnValue;
 }
+
+void Thread::Cancel() {
+    pthread_cancel(threadId);
+}

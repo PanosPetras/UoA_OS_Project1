@@ -11,7 +11,7 @@ void* SenderThread(void* buffer) {
         
         wBuff->Write(message);
 
-        if(message == "#BYE#") exit(EXIT_SUCCESS);
+        if(message == "#BYE#") pthread_exit(NULL);
     }
 
     return nullptr;

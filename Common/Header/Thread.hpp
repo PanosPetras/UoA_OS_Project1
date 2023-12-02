@@ -20,6 +20,8 @@ public:
 
     void Start();
     void* Join();
+
+    void Cancel();
 };
 
 #endif

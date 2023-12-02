@@ -16,8 +16,7 @@ Semaphore::~Semaphore() {
     if(sem_close(semaphore) < 0)
         std::cerr << "Failed to close semaphore" << std::endl;
 
-    if(sem_unlink(name.c_str()) == -1)
-        std::cerr << "Failed to unlink semaphore" << std::endl;
+    sem_unlink(name.c_str());
 }
 
 void Semaphore::Initialize(

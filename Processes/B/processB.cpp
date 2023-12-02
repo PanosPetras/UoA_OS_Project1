@@ -40,5 +40,6 @@ int main() {
     }
 
     senderThread.Join();
+    receiverThread.Cancel();
     receiverThread.Join();
 }
