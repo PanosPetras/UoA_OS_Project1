@@ -23,8 +23,8 @@ public:
         std::string name
     );
 
-    int Wait();
-    int Post();
+    void Wait();
+    void Post();
     int Value();
 };
 

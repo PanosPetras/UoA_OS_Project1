@@ -1,6 +1,6 @@
 #include "SharedMemory.hpp"
 #include "Constants.hpp"
-#include <stdio.h>
+#include <iostream>
 #include <unistd.h>
 #include <sys/shm.h>
 #include <sys/mman.h>
@@ -21,11 +21,17 @@ void SharedMemory::Initialize(
     // Create the shared memory object
     smfd = shm_open(name.c_str(), O_CREAT | O_RDWR, 0666);
 
+    if(smfd == -1) 
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to initialize shared memory object");
+
     // Configure the size of the shared memory object
-    if(ftruncate(smfd, Constants::bufferSize)) throw std::bad_alloc();
+    if(ftruncate(smfd, Constants::bufferSize) == -1) throw std::bad_alloc();
 
     // Memory map the shared memory object
     memory = (char*)mmap(0, Constants::bufferSize, PROT_WRITE | PROT_READ, MAP_SHARED, smfd, 0);
+
+    if(memory == MAP_FAILED)
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to map the memory of the shared memory object");
 }
 
 void SharedMemory::Open(
@@ -36,8 +42,14 @@ void SharedMemory::Open(
     // Open the shared memory object
     smfd = shm_open(name.c_str(), O_RDWR, 0666);
 
+    if(smfd == -1) 
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to open shared memory object");
+
     // Memory map the shared memory object
     memory = (char*)mmap(0, Constants::bufferSize, PROT_WRITE | PROT_READ, MAP_SHARED, smfd, 0);
+
+    if(memory == MAP_FAILED)
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to map the memory of the shared memory object");
 }
 
 char SharedMemory::Read(

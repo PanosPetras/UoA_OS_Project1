@@ -1,6 +1,8 @@
 #include "Semaphore.hpp"
 #include <fcntl.h>
-#include <stdio.h>
+#include <iostream>
+#include <stdexcept>
+#include <system_error>
 
 #define PERMS (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP)
 
@@ -12,7 +14,7 @@ Semaphore::~Semaphore() {
     if(semaphore == nullptr) return;
     
     if(sem_close(semaphore) < 0)
-        perror("Failed to close semaphore");
+        std::cerr << "Failed to close semaphore" << std::endl;
 
     sem_unlink(name.c_str());
 }
@@ -25,10 +27,8 @@ void Semaphore::Initialize(
     
     semaphore = sem_open(name.c_str(), O_CREAT, PERMS, initialValue);
 
-    if(semaphore == SEM_FAILED) { 
-        perror("Failed to initialize semaphore");
-        exit(EXIT_FAILURE);
-    }
+    if(semaphore == SEM_FAILED)
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to initialize semaphore");
 }
 
 void Semaphore::Open(
@@ -38,18 +38,18 @@ void Semaphore::Open(
 
     semaphore = sem_open(name.c_str(), O_RDWR);
 
-    if(semaphore == SEM_FAILED) { 
-        perror("Failed to open semaphore");
-        exit(EXIT_FAILURE);
-    }
+    if(semaphore == SEM_FAILED) 
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to open semaphore");
 }
 
-int Semaphore::Wait() {
-    return sem_wait(semaphore);
+void Semaphore::Wait() {
+    if(sem_wait(semaphore) != 0)
+        std::cerr << "Failed to wait semaphore" << std::endl;
 }
 
-int Semaphore::Post() {
-    return sem_post(semaphore);
+void Semaphore::Post() {
+    if(sem_post(semaphore) != 0)
+        std::cerr << "Failed to post semaphore" << std::endl;
 }
 
 int Semaphore::Value() {

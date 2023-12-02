@@ -7,26 +7,37 @@
 
 int main() {
     auto rBuff = ReadOnlyBuffer();
-    rBuff.Open(
-        std::string(Constants::processBReadSem),
-        std::string(Constants::processAWriteSem),
-        std::string(Constants::availabilitySem2),
-        std::string(Constants::shmSegment2)
-    );
-
     auto wBuff = WriteOnlyBuffer();
-    wBuff.Open(
-        std::string(Constants::processAReadSem),
-        std::string(Constants::processBWriteSem),
-        std::string(Constants::availabilitySem1),
-        std::string(Constants::shmSegment1)
-    );
+
+    try {
+        rBuff.Open(
+            std::string(Constants::processBReadSem),
+            std::string(Constants::processAWriteSem),
+            std::string(Constants::availabilitySem2),
+            std::string(Constants::shmSegment2)
+        );
+
+        wBuff.Open(
+            std::string(Constants::processAReadSem),
+            std::string(Constants::processBWriteSem),
+            std::string(Constants::availabilitySem1),
+            std::string(Constants::shmSegment1)
+        );
+    } catch(...) {
+        std::cerr << "Failed to open buffers" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     Thread senderThread = Thread(&SenderThread, &wBuff),
             receiverThread(&ReceiverThread, &rBuff);
     
-    senderThread.Start();
-    receiverThread.Start();
+    try {
+        senderThread.Start();
+        receiverThread.Start();
+    } catch(...) {
+        std::cerr << "Failed to start I/O threads" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     senderThread.Join();
     receiverThread.Join();

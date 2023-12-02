@@ -1,5 +1,8 @@
 #include "Thread.hpp"
 #include <pthread.h>
+#include <stdexcept>
+#include <system_error>
+#include <iostream>
 
 Thread::Thread(
     void* (*func)(void*),
@@ -15,12 +18,13 @@ void Thread::Start() {
     if(isStarted) return;
     isStarted = true;
 
-    pthread_create(
+    if(pthread_create(
         &threadId,
         NULL, 
         func, 
         arg
-    );
+    ) != 0)
+        throw std::system_error(EAGAIN, std::generic_category(), "Failed to start thread");
 }
 
 void* Thread::Join() {
@@ -29,7 +33,8 @@ void* Thread::Join() {
 
     void* returnValue;
 
-    pthread_join(threadId, &returnValue);
+    if(pthread_join(threadId, &returnValue) != 0)
+        std::cerr << "Failed to join thread" << std::endl;
 
     return returnValue;
 }
